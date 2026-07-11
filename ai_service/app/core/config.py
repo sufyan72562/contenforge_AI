@@ -10,6 +10,11 @@ class Settings(BaseSettings):
         description="Path to the Google service-account JSON key file."
     )
 
+    google_spreadsheet_id: str = Field(
+        min_length=1,
+        description="Google spreadsheet identifier.",
+    )
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
