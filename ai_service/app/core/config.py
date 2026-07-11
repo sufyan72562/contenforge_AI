@@ -6,14 +6,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    google_service_account_file: Path = Field(
-        description="Path to the Google service-account JSON key file."
-    )
+    google_service_account_file: Path
 
-    google_spreadsheet_id: str = Field(
-        min_length=1,
-        description="Google spreadsheet identifier.",
-    )
+    google_spreadsheet_id: str = Field(min_length=1)
+
+    product_sheet_name: str = "products"
+    product_sheet_columns: str = "A:Z"
+
+    brand_memory_sheet_name: str = "brand_memory"
+    brand_memory_sheet_columns: str = "A:B"
+
+    content_library_sheet_name: str = "content_library"
+    content_library_sheet_columns: str = "A:Z"
 
     model_config = SettingsConfigDict(
         env_file=".env",
