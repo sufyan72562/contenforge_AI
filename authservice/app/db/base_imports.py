@@ -1,0 +1,1 @@
+from app.models.user import User  # noqa: F401 - Import models for autogenerate
