@@ -93,3 +93,5 @@ def search_products(db: Session, user_id: int, query: str, skip: int = 0, limit:
     total = q.count()
     products = q.offset(skip).limit(limit).all()
     return products, total
+
+print("testing commit ")
