@@ -9,7 +9,7 @@ from app.repositories.knowledge.product_repository import (
     ProductKnowledgeRepository,
 )
 from app.services.knowledge_service import KnowledgeService
-
+from app.rag.document_builder import KnowledgeDocumentBuilder
 
 app = FastAPI(title="ContentForge AI Service")
 
@@ -96,3 +96,30 @@ async def test_knowledge():
     knowledge = await knowledge_service.load()
 
     return knowledge.model_dump()
+
+
+
+
+knowledge_service = KnowledgeService()
+builder = KnowledgeDocumentBuilder()
+
+
+@app.get("/test/documents")
+async def test_documents():
+
+    knowledge = await knowledge_service.load()
+
+    documents = builder.build(
+        knowledge
+    )
+
+    return {
+        "count": len(documents),
+        "documents": [
+            {
+                "content": doc.page_content,
+                "metadata": doc.metadata,
+            }
+            for doc in documents
+        ],
+    }
