@@ -1,8 +1,10 @@
 from fastapi import FastAPI, HTTPException
 
+from app.repositories.knowledge.brand_memoy_repository import BrandMemoryRepository
 from app.repositories.exceptions import (
     ProductKnowledgeRepositoryError,
 )
+from app.repositories.knowledge.content_library_repository import ContentLibraryRepository
 from app.repositories.knowledge.product_repository import (
     ProductKnowledgeRepository,
 )
@@ -13,6 +15,22 @@ app = FastAPI(title="ContentForge AI Service")
 
 @app.get("/test/products")
 async def list_products() -> dict:
+    repo = BrandMemoryRepository()
+
+    memory = await repo.get_brand_memory()
+
+    print(memory.brand_name)
+
+    print(memory.cta_default)
+
+    print(memory.preferred_words)
+
+    return {
+        "brand_name": memory.brand_name,
+        "cta_default": memory.cta_default,
+        "preferred_words": memory.preferred_words,
+    }
+
     repository = ProductKnowledgeRepository()
 
     try:
@@ -50,3 +68,20 @@ async def get_product(product_id: str) -> dict:
             status_code=502,
             detail=str(exc),
         ) from exc
+        
+
+content_repo = ContentLibraryRepository()
+
+
+@app.get("/test/content-library")
+async def test_content_library():
+
+    data = await content_repo.list_content()
+
+    return {
+        "count": len(data),
+        "items": [
+            item.model_dump()
+            for item in data
+        ],
+    }
