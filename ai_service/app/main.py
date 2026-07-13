@@ -10,6 +10,7 @@ from app.repositories.knowledge.product_repository import (
 )
 from app.services.knowledge_service import KnowledgeService
 from app.rag.document_builder import KnowledgeDocumentBuilder
+from app.embeddings.embedding_service import EmbeddingService
 
 app = FastAPI(title="ContentForge AI Service")
 
@@ -90,12 +91,27 @@ async def test_content_library():
 knowledge_service = KnowledgeService()
 
 
-@app.get("/test/knowledge")
-async def test_knowledge():
+@app.get("/test/embeddings")
+async def test_embeddings():
 
-    knowledge = await knowledge_service.load()
+    service = EmbeddingService()
 
-    return knowledge.model_dump()
+
+    vector = service.embed_query(
+        "meri skin dry hai mujhe hydration chahiye"
+    )
+    
+    return {
+        "vector_length": len(vector),
+        "first_values": vector[:5],
+    }
+
+    print("Vector length:", len(vector))
+    print("First values:", vector[:5])
+
+    # knowledge = await knowledge_service.load()
+
+    # return knowledge.model_dump()
 
 
 
@@ -123,3 +139,4 @@ async def test_documents():
             for doc in documents
         ],
     }
+
