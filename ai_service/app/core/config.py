@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    DATABASE_URL: str = Field(min_length=1)
     google_service_account_file: Path
 
     google_spreadsheet_id: str = Field(min_length=1)

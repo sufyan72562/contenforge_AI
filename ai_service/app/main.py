@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 
+from app.vectorstore.pgvector_store import PGVectorStore
 from app.repositories.knowledge.brand_memory_repository import BrandMemoryRepository
 from app.repositories.exceptions import (
     ProductKnowledgeRepositoryError,
@@ -11,6 +12,7 @@ from app.repositories.knowledge.product_repository import (
 from app.services.knowledge_service import KnowledgeService
 from app.rag.document_builder import KnowledgeDocumentBuilder
 from app.embeddings.embedding_service import EmbeddingService
+from app.rag.ingestion_service import KnowledgeIngestionService
 
 app = FastAPI(title="ContentForge AI Service")
 
@@ -140,3 +142,25 @@ async def test_documents():
         ],
     }
 
+
+
+@app.post("/knowledge/ingest")
+async def ingest():
+    vector_store = PGVectorStore()
+    results = vector_store.similarity_search(
+    query="I need only serum",
+    k=3
+)
+    return {
+        "results": [
+            {
+                "content": result.page_content,
+                "metadata": result.metadata,
+            }
+            for result in results
+        ],
+    }
+
+    # service = KnowledgeIngestionService()
+
+    # return await service.ingest()
