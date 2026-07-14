@@ -9,6 +9,7 @@ from app.repositories.knowledge.content_library_repository import ContentLibrary
 from app.repositories.knowledge.product_repository import (
     ProductKnowledgeRepository,
 )
+from app.rag.retriever import KnowledgeRetriever
 from app.services.knowledge_service import KnowledgeService
 from app.rag.document_builder import KnowledgeDocumentBuilder
 from app.embeddings.embedding_service import EmbeddingService
@@ -80,15 +81,29 @@ content_repo = ContentLibraryRepository()
 @app.get("/test/content-library")
 async def test_content_library():
 
-    data = await content_repo.list_content()
+    retriever = KnowledgeRetriever()
 
-    return {
-        "count": len(data),
-        "items": [
-            item.model_dump()
-            for item in data
-        ],
-    }
+
+    documents = retriever.retrieve(
+        "Create educational post about sunscreen",
+        k=3
+    )
+
+
+    for doc in documents:
+
+        print("----------------")
+        print(doc.metadata)
+        print(doc.page_content[:200])
+    # data = await content_repo.list_content()
+
+    # return {
+    #     "count": len(data),
+    #     "items": [
+    #         item.model_dump()
+    #         for item in data
+    #     ],
+    # }
 
 knowledge_service = KnowledgeService()
 

@@ -25,13 +25,13 @@ class PGVectorStore:
         )
 
 
-    def similarity_search(
+    def search(
         self,
         query: str,
         k: int = 5
     ):
 
         return self.vector_store.similarity_search(
-            query,
+            query=query,
             k=k
         )
