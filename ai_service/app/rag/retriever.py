@@ -8,7 +8,7 @@ class KnowledgeRetriever:
         self.vector_store = PGVectorStore()
 
 
-    def retrieve(
+    async def retrieve(
         self,
         query: str,
         k: int = 5

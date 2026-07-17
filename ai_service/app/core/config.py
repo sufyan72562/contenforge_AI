@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     content_library_sheet_name: str = "content_library"
     content_library_sheet_columns: str = "A:Z"
     HUGGINGFACEHUB_API_TOKEN: str = Field(min_length=1)
+    OPENAI_API_KEY: str = Field(min_length=1)
 
     model_config = SettingsConfigDict(
         env_file=".env",

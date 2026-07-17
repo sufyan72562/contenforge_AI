@@ -1,53 +1,92 @@
-from langchain_core.documents import Document
-
-
 class PromptBuilder:
 
 
     def build(
         self,
         query: str,
-        documents: list[Document]
+        context: dict
     ) -> str:
 
-
-        context = self._prepare_context(
-            documents
-        )
-
-
-        prompt = f"""
+        return f"""
 You are an AI marketing assistant for Elegancea skincare brand.
 
-Your task:
+
+TASK:
 {query}
 
 
-Brand Knowledge:
-{context}
+BRAND KNOWLEDGE:
+{self._format_context(
+    context.get("brand", [])
+)}
 
 
-Instructions:
-- Follow brand tone
-- Avoid medical claims
-- Keep content trustworthy
-- Do not make false promises
+PRODUCT KNOWLEDGE:
+{self._format_context(
+    context.get("product", [])
+)}
 
-Generate the response.
+
+CONTENT STRATEGY:
+{self._format_context(
+    context.get("content", [])
+)}
+
+
+RULES:
+
+- Follow Elegancea premium brand voice.
+- Keep content trustworthy.
+- Avoid medical claims.
+- Avoid guaranteed results.
+- Do not invent product information.
+- Use only provided knowledge.
+
+
+CAPTION REQUIREMENTS:
+
+- Very short.
+- Maximum 15-20 words.
+- Marketing focused.
+- Attractive first impression.
+- Clear customer benefit.
+- Natural CTA.
+
+
+IMAGE PROMPT REQUIREMENTS:
+
+Create a professional social media creative direction.
+
+Include:
+- Scene
+- Background
+- Lighting
+- Product placement
+- Visual style
+- Props
+
+Important:
+The original product image must remain unchanged.
+
+
+RETURN ONLY JSON:
+
+{{
+    "caption": "",
+    "hashtags": [],
+    "image_prompt": "",
+    "image_brief": ""
+}}
+
 """
 
 
-        return prompt
-
-
-    def _prepare_context(
+    def _format_context(
         self,
-        documents: list[Document]
+        items: list[str]
     ) -> str:
 
-        return "\n\n".join(
-            [
-                doc.page_content
-                for doc in documents
-            ]
-        )
+        if not items:
+            return "No information available."
+
+        return "\n\n".join(items)
